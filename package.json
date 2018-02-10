@@ -2,12 +2,17 @@
   "name": "crocheteers",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://project-2edb6.firebaseapp.com",
   "dependencies": {
+    "material-ui": "^1.0.0-beta.33",
+    "material-ui-icons": "^1.0.0-beta.17",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1"
   },
   "scripts": {
+    "predeploy":"npm run build",
+    "deploy":"firebase deploy",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
