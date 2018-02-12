@@ -10,8 +10,18 @@ import ProductDialog from './ProductDialog'
 import Snackbar from 'material-ui/Snackbar'
 import IconButton from 'material-ui/IconButton'
 import CloseIcon from 'material-ui-icons/Close'
+import ShoppingCart from 'material-ui-icons/ShoppingCart'
+import Badge from 'material-ui/Badge'
+import CartDialog from './CartDialog';
 
 const styles = theme => ({
+  margin: {
+    margin: theme.spacing.unit * 2,
+  },
+  button: {
+    margin: theme.spacing.unit,
+    width: '100%'
+  },
   rootProd: {
     flexGrow: 1,
     display: 'flex',
@@ -22,6 +32,15 @@ const styles = theme => ({
   },
   rootProdContents: {
     flex: 1
+  },
+  textField: {
+    textAlign: 'center'
+  },
+  quantityHolder: {
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   productDescription: {
     paddingLeft: '24px',
@@ -49,7 +68,7 @@ const styles = theme => ({
   },
   main: {
     padding: '14px',
-    marginTop: '60px'
+    marginTop: '80px'
   },
   appBar: {
     position: 'relative',
@@ -62,7 +81,13 @@ const styles = theme => ({
 class App extends Component {
   state = {
     productDialogOpen: false,
-    open: false
+    open: false,
+    cart: [],
+    cartOpen: false
+  }
+
+  addCartItem = (item) => {
+    this.setState({ cart: [...this.state.cart, item] }, this.handleClose)
   }
 
   handleClickOpen = () => {
@@ -73,16 +98,28 @@ class App extends Component {
     this.setState({ productDialogOpen: false })
   }
 
+  handleCartOpen = () => {
+    if (this.state.cart.length === 0) {
+      this.handleClickOpenSnackbar()
+      return
+    }
+    this.setState({ cartOpen: true })
+  }
+
+  handleCartClose = () => {
+    this.setState({ cartOpen: false })
+  }
+
   handleClickOpenSnackbar = () => {
-    this.setState({ open: true });
-  };
+    this.setState({ open: true })
+  }
 
   handleCloseSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
-      return;
+      return
     }
 
-    this.setState({ open: false });
+    this.setState({ open: false })
   };
 
   render() {
@@ -93,9 +130,14 @@ class App extends Component {
       <div className={classes.root}>
         <AppBar>
           <Toolbar>
-            <Typography variant='title' color='inherit'>
+            <Typography variant="title" color="inherit" className={classes.flex}>
               Crocheteers
-          </Typography>
+            </Typography>
+            <IconButton onClick={this.handleCartOpen}>
+              <Badge badgeContent={this.state.cart.length} color="secondary">
+                <ShoppingCart />
+              </Badge>
+            </IconButton>
           </Toolbar>
         </AppBar>
         <div className={classes.main}>
@@ -107,11 +149,12 @@ class App extends Component {
             ))}
           </GridList>
         </div>
-        <ProductDialog {...this.props} productDialogOpen={productDialogOpen} handleClose={this.handleClose} openSnackbar={this.handleClickOpenSnackbar} />
+        <ProductDialog {...this.props} productDialogOpen={productDialogOpen} handleClose={this.handleClose} openSnackbar={this.handleClickOpenSnackbar} onAddCartItem={this.addCartItem} />
+        <CartDialog cartItems={this.state.cart} cartOpen={this.state.cartOpen} onHandleCartClose={this.handleCartClose} {...this.props} />
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'left',
+            horizontal: 'right',
           }}
           open={this.state.open}
           autoHideDuration={6000}
@@ -119,7 +162,7 @@ class App extends Component {
           SnackbarContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">🎊 Woo hoo 🎊 ! Another potential buyer, we are working hard to allow making orders via this website. In the mean time please send your order enquiry to 0727383066 and please tell your friends about us. ❤️</span>} />
+          message={<span id="message-id">Empty cart, please add items to cart 🛒 to check out</span>} />
       </div>
     )
   }

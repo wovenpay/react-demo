@@ -1,17 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './assets/css/index.css'
+import { createMuiTheme, MuiThemeProvider } from 'material-ui/styles'
+import deepPurple from 'material-ui/colors/deepPurple'
+import teal from 'material-ui/colors/teal'
 import App from './js/reactcomponents/App'
 import registerServiceWorker from './js/registerServiceWorker'
-import { createMuiTheme, MuiThemeProvider } from 'material-ui/styles'
-import indigo from 'material-ui/colors/indigo'
-import pink from 'material-ui/colors/pink'
-import red from 'material-ui/colors/red'
+import './assets/css/index.css'
 
 const theme = createMuiTheme({
     palette: {
-      primary: pink,
-      secondary: indigo,
+      primary: teal,
+      secondary: deepPurple,
     },
     status: {
       danger: 'orange',
