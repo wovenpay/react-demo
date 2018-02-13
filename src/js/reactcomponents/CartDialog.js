@@ -29,7 +29,7 @@ const mapListItems = (cartItems, classes) => {
   return items
 }
 
-const CartDialog = ({ cartOpen, onHandleCartClose, classes, cartItems }) => {
+const CartDialog = ({ cartOpen, onHandleCartClose, classes, cartItems, onCheckout }) => {
   return (
     <Dialog
       fullScreen
@@ -44,7 +44,7 @@ const CartDialog = ({ cartOpen, onHandleCartClose, classes, cartItems }) => {
           <Typography variant="title" color="inherit" className={classes.flex}>
             Cart
           </Typography>
-          <Button color="inherit">
+          <Button color="inherit" onClick={onCheckout}>
             Checkout
           </Button>
         </Toolbar>

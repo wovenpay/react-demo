@@ -8,6 +8,10 @@ import Snackbar from 'material-ui/Snackbar'
 import IconButton from 'material-ui/IconButton'
 import ShoppingCart from 'material-ui-icons/ShoppingCart'
 import Badge from 'material-ui/Badge'
+import TextField from 'material-ui/TextField'
+import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog'
+import { CircularProgress } from 'material-ui/Progress'
+import Button from 'material-ui/Button'
 import ProductDialog from './ProductDialog'
 import CartDialog from './CartDialog'
 import tileData from './tileData'
@@ -67,13 +71,24 @@ const styles = theme => ({
   },
   main: {
     padding: '14px',
-    marginTop: '80px'
+    marginTop: '60px'
   },
   appBar: {
     position: 'relative',
   },
   flex: {
     flex: 1,
+  },
+  wrapper: {
+    margin: theme.spacing.unit,
+    position: 'relative',
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
   }
 })
 
@@ -82,7 +97,10 @@ class App extends Component {
     productDialogOpen: false,
     open: false,
     cart: [],
-    cartOpen: false
+    cartOpen: false,
+    inputNumberDialogOpen: false,
+    loading: false,
+    stkPushed: false
   }
 
   componentDidMount() {
@@ -130,21 +148,42 @@ class App extends Component {
     }
 
     this.setState({ open: false })
-  };
+  }
+
+  checkout = async () => {
+    this.handleCartClose()
+    this.setState({ inputNumberDialogOpen: true })
+  }
+
+  sendPushStk = async () => {
+    const { phone } = this.state
+    this.setState({ loading: true })
+    const { wovenPay } = this.props
+    let response = await wovenPay.chargePayment('mobile.mpesa', 2000, phone, 'samle@email.com', 'test', 'oi').catch(e => console.log(e))
+    let json = await response.json()
+    console.log(json)
+    if (json.status === 'completed' && json.transaction_id) {
+      this.setState({ loading: false, stkPushed: true })
+    }
+  }
+
+  handleInputNumberDialogClose = () => {
+    this.setState({ inputNumberDialogOpen: false })
+  }
 
   render() {
     const { classes } = this.props
-    const { productDialogOpen } = this.state
+    const { productDialogOpen, loading, phone, stkPushed } = this.state
 
     return (
       <div className={classes.root}>
         <AppBar>
           <Toolbar>
-            <Typography variant="title" color="inherit" className={classes.flex}>
+            <Typography variant='title' color='inherit' className={classes.flex}>
               Crocheteers
             </Typography>
             <IconButton onClick={this.handleCartOpen}>
-              <Badge badgeContent={this.state.cart.length} color="secondary">
+              <Badge badgeContent={this.state.cart.length} color='secondary'>
                 <ShoppingCart />
               </Badge>
             </IconButton>
@@ -160,7 +199,7 @@ class App extends Component {
           </GridList>
         </div>
         <ProductDialog {...this.props} productDialogOpen={productDialogOpen} handleClose={this.handleClose} openSnackbar={this.handleClickOpenSnackbar} onAddCartItem={this.addCartItem} />
-        <CartDialog cartItems={this.state.cart} cartOpen={this.state.cartOpen} onHandleCartClose={this.handleCartClose} {...this.props} />
+        <CartDialog cartItems={this.state.cart} cartOpen={this.state.cartOpen} onHandleCartClose={this.handleCartClose} onCheckout={this.checkout} {...this.props} />
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
@@ -172,7 +211,49 @@ class App extends Component {
           SnackbarContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">Empty cart, please add items to cart <span role='img' aria-label='cart icon'>🛒</span> to check out</span>} />
+          message={<span id='message-id'>Empty cart, please add items to cart <span role='img' aria-label='cart icon'>🛒</span> to check out</span>} />
+        <Dialog
+          open={this.state.inputNumberDialogOpen}
+          onClose={this.handleInputNumberDialogClose}
+          aria-labelledby='form-dialog-title'>
+          <DialogTitle id='form-dialog-title'>Make payment</DialogTitle>
+          {
+            stkPushed ?
+              <DialogContent>
+                <DialogContentText>
+                  Please enter pin on your device to complete payment
+                </DialogContentText>
+              </DialogContent>
+              :
+              <DialogContent>
+                <DialogContentText>
+                  Please enter an MPESA phone number to send mpesa
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin='dense'
+                  id='name'
+                  label='Phone number'
+                  type='tel'
+                  fullWidth
+                  value={phone}
+                  onChange={e => this.setState({ phone: e.target.value })}
+                />
+              </DialogContent>
+
+          }
+          <DialogActions>
+            <Button onClick={this.handleInputNumberDialogClose} color='primary'>
+              {stkPushed ? 'Close' : 'Cancel'}
+            </Button>
+            <div className={classes.wrapper}>
+              <Button onClick={this.sendPushStk} color='primary' disabled={loading || stkPushed}>
+                Make payment
+              </Button>
+              {loading && <CircularProgress size={24} className={classes.buttonProgress} />}
+            </div>
+          </DialogActions>
+        </Dialog>
       </div>
     )
   }
