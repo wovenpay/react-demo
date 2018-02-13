@@ -9,11 +9,11 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1",
-    "woven-pay-js": "file:../woven-pay-js"
+    "woven-pay-js": "^1.0.0"
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "firebase deploy",
+    "deploy": "git push heroku master",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
