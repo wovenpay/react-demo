@@ -7,7 +7,6 @@ import Button from 'material-ui/Button'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
 import Typography from 'material-ui/Typography'
-import Grid from 'material-ui/Grid'
 import Add from 'material-ui-icons/Add'
 import Remove from 'material-ui-icons/Remove'
 import TextField from 'material-ui/TextField'
@@ -25,12 +24,12 @@ class ProductDialog extends Component {
   }
 
   addQuantity = () => {
-    this.setState({ quantity: ++this.state.quantity }, this.calculateTotal)
+    this.setState((prevState) => { return { quantity: ++prevState.quantity } }, this.calculateTotal)
   }
 
   deductQuantity = () => {
-    if (this.state.quantity == 0) return
-    this.setState({ quantity: --this.state.quantity }, this.calculateTotal)
+    if (this.state.quantity === 0) return
+    this.setState((prevState) => { return { quantity: --prevState.quantity } }, this.calculateTotal)
   }
 
   calculateTotal = () => {
@@ -38,7 +37,7 @@ class ProductDialog extends Component {
   }
 
   render() {
-    const { productDialogOpen, handleClose, classes, openSnackbar, onAddCartItem } = this.props
+    const { productDialogOpen, handleClose, classes, onAddCartItem } = this.props
 
     return (
       <Dialog
@@ -57,7 +56,7 @@ class ProductDialog extends Component {
           </Toolbar>
         </AppBar>
         <div justify="center" className={classes.rootProd}>
-          <img src={'https://source.unsplash.com/collection/920387/600x400'} className={classes.rootProdContents} />
+          <img src={'https://source.unsplash.com/collection/920387/600x400'} className={classes.rootProdContents} alt='Something' />
           <div className={classes.productDescription}>
             <Typography variant="display1" color="inherit" align='center'>
               Product details

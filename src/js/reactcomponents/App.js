@@ -1,18 +1,17 @@
 import React, { Component } from 'react'
-import './../../assets/css/App.css'
 import Typography from 'material-ui/Typography'
 import { withStyles } from 'material-ui/styles'
 import GridList, { GridListTile } from 'material-ui/GridList'
-import tileData from './tileData'
 import AppBar from 'material-ui/AppBar'
 import Toolbar from 'material-ui/Toolbar'
-import ProductDialog from './ProductDialog'
 import Snackbar from 'material-ui/Snackbar'
 import IconButton from 'material-ui/IconButton'
-import CloseIcon from 'material-ui-icons/Close'
 import ShoppingCart from 'material-ui-icons/ShoppingCart'
 import Badge from 'material-ui/Badge'
-import CartDialog from './CartDialog';
+import ProductDialog from './ProductDialog'
+import CartDialog from './CartDialog'
+import tileData from './tileData'
+import './../../assets/css/App.css'
 
 const styles = theme => ({
   margin: {
@@ -143,7 +142,7 @@ class App extends Component {
         <div className={classes.main}>
           <GridList cellHeight={200} className={classes.gridList} cols={3}>
             {tileData.map(tile => (
-              <GridListTile key={tile.img} cols={tile.cols || 1} onClick={this.handleClickOpen}>
+              <GridListTile key={tile.id} cols={tile.cols || 1} onClick={this.handleClickOpen}>
                 <img src={tile.img} alt={tile.title} />
               </GridListTile>
             ))}
@@ -162,7 +161,7 @@ class App extends Component {
           SnackbarContentProps={{
             'aria-describedby': 'message-id',
           }}
-          message={<span id="message-id">Empty cart, please add items to cart 🛒 to check out</span>} />
+          message={<span id="message-id">Empty cart, please add items to cart <span role='img' aria-label='cart icon'>🛒</span> to check out</span>} />
       </div>
     )
   }

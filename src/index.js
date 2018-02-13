@@ -18,6 +18,8 @@ const theme = createMuiTheme({
   }
 })
 
+let wovenPay = new WovenPay(process.env.REACT_APP_URL)
+console.log(wovenPay)
 // let woven = initWovenPay(process.env.REACT_APP_URL)
 
 // getAuthToken(process.env.REACT_APP_SAMPLE_EMAIL, process.env.REACT_APP_SAMPLE_PASSWORD)

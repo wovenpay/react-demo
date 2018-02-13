@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Dialog from 'material-ui/Dialog'
 import CloseIcon from 'material-ui-icons/Close'
 import Slide from 'material-ui/transitions/Slide'
@@ -20,7 +20,7 @@ const mapListItems = (cartItems, classes) => {
     items.push(
       <ListItem>
         <Avatar>
-          <img src={'https://source.unsplash.com/collection/920387/600x400'} className={classes.rootProdContents} />
+          <img src={'https://source.unsplash.com/collection/920387/600x400'} className={classes.rootProdContents} alt='Avatar' />
         </Avatar>
         <ListItemText primary={`(${element.quantity} X) ${element.itemName}`} secondary={`Total: Ksh.${element.total}`} />
       </ListItem>
