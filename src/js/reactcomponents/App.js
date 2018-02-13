@@ -85,6 +85,17 @@ class App extends Component {
     cartOpen: false
   }
 
+  componentDidMount() {
+    this.authenticateWoven()
+  }
+
+  authenticateWoven = async () => {
+    const { wovenPay } = this.props
+    let response = await wovenPay.getAuthToken(process.env.REACT_APP_SAMPLE_EMAIL, process.env.REACT_APP_SAMPLE_PASSWORD)
+    let json = await response.json()
+    console.log(json)
+  }
+
   addCartItem = (item) => {
     this.setState({ cart: [...this.state.cart, item] }, this.handleClose)
   }
